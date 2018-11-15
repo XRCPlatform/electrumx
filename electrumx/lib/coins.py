@@ -2300,3 +2300,43 @@ class CivXTestnet(CivX):
             return double_sha256(header)
         else:
             return hex_str_to_hash(CivXTestnet.GENESIS_HASH)
+
+class BitcoinRhodium(BitcoinMixin, Coin):
+    NAME = "BitcoinRhodium"
+    SHORTNAME = "BTR"
+    NET = "mainnet"
+    GENESIS_HASH = ('baff5bfd9dc43fb672d003ec20fd2142'
+                    '8f9282ca46bfa1730d73e1f2c75f5fdd')
+    DAEMON = daemon.BitcoinRhodiumDaemon
+    DESERIALIZER = lib_tx.Deserializer
+    RPC_PORT = 19660
+    TX_COUNT_HEIGHT = 101619
+    TX_COUNT = 132681
+    TX_PER_BLOCK = 1
+    PEER_DEFAULT_PORTS = {'t': '51001', 's': '51002'}
+    PEERS = [
+        'electrumx1.bitcoinrh.org s t',
+        'electrumx2.bitcoinrh.org s t',
+        'electrumx3.bitcoinrh.org s t',
+        'electrumx4.bitcoinrh.org s t'
+    ]
+
+    CHUNK_SIZE = 2016
+    BASIC_HEADER_SIZE = 80
+    STATIC_BLOCK_HEADERS = True
+    SESSIONCLS = ElectrumX
+    BLOCK_PROCESSOR = block_proc.BlockProcessor
+    ENCODE_CHECK = Base58.encode_check
+    DECODE_CHECK = Base58.decode_check
+    # Peer discovery
+    PEER_DEFAULT_PORTS = {'t': '16665' }
+
+class BitcoinRhodiumTestnet(BitcoinRhodium):
+    NAME = "BitcoinRhodiumTestnet"
+    SHORTNAME = "tBTR"
+    GENESIS_HASH = ('a485961c1554fdcd947bac07be3f1991'
+                    'b41ee842552007bd0a39c55e1310b872')
+    NET = "testnet"
+    PEERS = [
+        'telectrum.bitcoinrh.org s t'
+    ]

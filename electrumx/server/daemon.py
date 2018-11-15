@@ -457,3 +457,48 @@ class PreLegacyRPCDaemon(LegacyRPCDaemon):
     async def deserialised_block(self, hex_hash):
         '''Return the deserialised block with the given hex hash.'''
         return await self._send_single('getblock', (hex_hash, False))
+
+class BitcoinRhodiumDaemon(LegacyRPCDaemon):
+    '''Bitcoin Rhodium doesn't support RPC request batching. '''
+    async def _send_vector(self, method, params_iterable, replace_errs=False):
+        '''Send several requests of the same method.
+
+        The result will be an array of the same length as params_iterable.
+        If replace_errs is true, any item with an error is returned as None,
+        otherwise an exception is raised.'''
+
+        results = []
+        for p in params_iterable:
+            result = await self._send_single(method, p)
+            results.append(result)
+
+        if results:
+            return results
+        return []
+
+    async def make_raw_header(self, b):
+        pbh = b.get('previousBlockHash')
+        if pbh is None:
+            pbh = '0' * 64
+        return b''.join([
+            pack('<L', b.get('version')),
+            hex_str_to_hash(pbh),
+            hex_str_to_hash(b.get('merkleRoot')),
+            pack('<L', self.timestamp_safe(b['time'])),
+            pack('<L', int(b.get('bits'), 16)),
+            pack('<L', int(b.get('nonce')))
+        ])
+
+    async def _send_data(self, data):
+        """
+        This is a temp fix until node has correct content-type returned.
+        """
+        async with self.workqueue_semaphore:
+            async with self.client_session() as session:
+                async with session.post(self.current_url(), data=data) as resp:
+                    kind = resp.headers.get('Content-Type', None)
+                    if kind == 'application/json':
+                        return await resp.json()
+                    # bitcoind's HTTP protocol "handling" is a bad joke
+                    text = await resp.text()
+                    return json.loads(text)
