@@ -501,4 +501,6 @@ class BitcoinRhodiumDaemon(LegacyRPCDaemon):
                         return await resp.json()
                     # bitcoind's HTTP protocol "handling" is a bad joke
                     text = await resp.text()
+                    if not text or text == '':
+                        return dict(errors=["BitcoinRhodium node returned blank response."])
                     return json.loads(text)
