@@ -2334,8 +2334,8 @@ class BitcoinRhodium(BitcoinMixin, Coin):
 class BitcoinRhodiumTestnet(BitcoinRhodium):
     NAME = "BitcoinRhodiumTestnet"
     SHORTNAME = "tBTR"
-    GENESIS_HASH = ('a485961c1554fdcd947bac07be3f1991'
-                    'b41ee842552007bd0a39c55e1310b872')
+    GENESIS_HASH = ('0d697a2401b7900d2ebfa8f2b3e3b7bb'
+                    '59595e798cdb11af10611c123260a89f')
     NET = "testnet"
     PEERS = [
         'telectrum.bitcoinrh.org s t'
