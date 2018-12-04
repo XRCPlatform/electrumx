@@ -2310,9 +2310,9 @@ class BitcoinRhodium(BitcoinMixin, Coin):
     DAEMON = daemon.BitcoinRhodiumDaemon
     DESERIALIZER = lib_tx.Deserializer
     RPC_PORT = 19660
-    TX_COUNT_HEIGHT = 101619
-    TX_COUNT = 132681
-    TX_PER_BLOCK = 1
+    TX_COUNT_HEIGHT = 8522
+    TX_COUNT = 25566
+    TX_PER_BLOCK = 3
     PEER_DEFAULT_PORTS = {'t': '51001', 's': '51002'}
     PEERS = [
         'electrumx1.bitcoinrh.org s t',
