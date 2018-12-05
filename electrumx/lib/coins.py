@@ -2329,7 +2329,7 @@ class BitcoinRhodium(BitcoinMixin, Coin):
     ENCODE_CHECK = Base58.encode_check
     DECODE_CHECK = Base58.decode_check
     # Peer discovery
-    PEER_DEFAULT_PORTS = {'t': '16665' }
+    PEER_DEFAULT_PORTS = {'t': '51001', 's': '51002'}
 
 class BitcoinRhodiumTestnet(BitcoinRhodium):
     NAME = "BitcoinRhodiumTestnet"
