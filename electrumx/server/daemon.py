@@ -476,19 +476,6 @@ class BitcoinRhodiumDaemon(LegacyRPCDaemon):
             return results
         return []
 
-    async def make_raw_header(self, b):
-        pbh = b.get('previousBlockHash')
-        if pbh is None:
-            pbh = '0' * 64
-        return b''.join([
-            pack('<L', b.get('version')),
-            hex_str_to_hash(pbh),
-            hex_str_to_hash(b.get('merkleRoot')),
-            pack('<L', self.timestamp_safe(b['time'])),
-            pack('<L', int(b.get('bits'), 16)),
-            pack('<L', int(b.get('nonce')))
-        ])
-
     async def _send_data(self, data):
         """
         This is a temp fix until node has correct content-type returned.
@@ -505,4 +492,6 @@ class BitcoinRhodiumDaemon(LegacyRPCDaemon):
                         return dict(error={
                             "message": "BitcoinRhodium node returned blank response.",
                             "code": self.WARMING_UP})
-                    return json.loads(text)
+                    result = json.loads(text)
+                    result['error'] = result.get('error', None)
+                    return result
